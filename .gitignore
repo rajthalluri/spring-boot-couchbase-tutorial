@@ -1,0 +1,31 @@
+
+*.class
+# Package Files #
+*.jar
+*.war
+*.ear
+*.db
+
+######################
+# Eclipse
+######################
+
+.classpath
+.project
+.settings
+.springBeans
+bin
+src/main/webapp
+target
+
+######################
+# IntelliJ
+######################
+.idea
+*.iml
+.metadata/
+Servers/
+.DS_Store
+web/
+
+
