@@ -12,8 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Service
 public class RestService {
@@ -30,6 +28,10 @@ public class RestService {
     @Autowired
     private IDatabaseDao databaseDao;
 
+    private final ResponseEntity badRequestResponseEntity =
+            new ResponseEntity<String>(JsonObject.create()
+                    .put("message", "A document id is required").toString(), HttpStatus.BAD_REQUEST);
+
     public @Bean
     Cluster cluster() {
         return CouchbaseCluster.create(hostname);
@@ -44,17 +46,15 @@ public class RestService {
         return databaseDao.getAll(bucket());
     }
 
-    public Object getByDocumentId(@RequestParam String document_id) {
-        if (document_id.equals("")) {
-            return new ResponseEntity<String>(JsonObject.create().put("message", "A document id is required").toString(), HttpStatus.BAD_REQUEST);
-        }
-        return databaseDao.getByDocumentId(bucket(), document_id);
+    public Object getByDocumentId(String document_id) {
+        return (StringUtils.isEmpty(document_id)) ? badRequestResponseEntity :
+                databaseDao.getByDocumentId(bucket(), document_id);
     }
 
-    public Object delete(@RequestBody String json) {
+    public Object delete(String json) {
         JsonObject jsonData = JsonObject.fromJson(json);
         if (StringUtils.isEmpty(jsonData.getString("document_id"))) {
-            return new ResponseEntity<String>(JsonObject.create().put("message", "A document id is required").toString(), HttpStatus.BAD_REQUEST);
+            return badRequestResponseEntity;
         }
         return databaseDao.delete(bucket(), jsonData.getString("document_id"));
     }
