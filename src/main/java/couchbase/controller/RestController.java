@@ -15,8 +15,8 @@ public class RestController {
     private RestService restService;
 
     @RequestMapping(value = "/getAll", method = RequestMethod.GET)
-    public Object getAll() {
-        return restService.getAll();
+    public Object getAll(@RequestParam(value = "limit", required = false) Integer limit) {
+        return restService.getAll(limit);
     }
 
     @RequestMapping(value = "/get", method = RequestMethod.GET)

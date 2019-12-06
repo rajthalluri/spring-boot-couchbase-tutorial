@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface IDatabaseDao {
 
-    List<Map<String, Object>> getAll(final Bucket bucket);
+    List<Map<String, Object>> getAll(final Bucket bucket, Integer limit);
 
     List<Map<String, Object>> getByDocumentId(final Bucket bucket, String documentId);
 

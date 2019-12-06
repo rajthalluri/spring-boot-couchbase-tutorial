@@ -8,22 +8,22 @@ import com.couchbase.client.java.query.consistency.ScanConsistency;
 import org.springframework.dao.DataRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static couchbase.util.CouchBaseConstants.GET_ALL_QUERY;
 import static couchbase.util.CouchBaseConstants.GET_DOCUMENT_BY_ID_QUERY;
 import static couchbase.util.CouchBaseConstants.SAVE_DOCUMENT_QUERY;
 import static couchbase.util.CouchBaseConstants.DELETE_DOCUMENT_BY_ID_QUERY;
+import static couchbase.util.CouchBaseConstants.GET_ALL_QUERY_LIMIT_100;
+import static couchbase.util.CouchBaseConstants.DEFAULT_LIMIT;
 
 @Repository
 public class DatabaseDaoImpl implements IDatabaseDao {
 
     @Override
-    public List<Map<String, Object>> getAll(final Bucket bucket) {
-        N1qlQueryResult result = bucket.query(N1qlQuery.simple(String.format(GET_ALL_QUERY, bucket.name()),
+    public List<Map<String, Object>> getAll(final Bucket bucket, Integer limit) {
+        int queryLimit = (limit == null) ? DEFAULT_LIMIT : limit;
+        N1qlQueryResult result = bucket.query(N1qlQuery.simple(String.format(GET_ALL_QUERY_LIMIT_100, bucket.name(), queryLimit),
                 N1qlParams.build().consistency(ScanConsistency.REQUEST_PLUS)));
         return extractResultOrThrow(result);
     }
